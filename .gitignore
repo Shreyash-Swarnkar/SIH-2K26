@@ -1,0 +1,27 @@
+# Environment
+.venv/
+__pycache__/
+*.pyc
+
+# Build / data (regenerate with scripts/gen_data.py)
+data/results/
+data/synthetic/**/*.txt
+data/synthetic/**/*.csv
+
+# Real-data derived artifacts (regenerate with scripts/real_firs.py + scripts/run_real.py)
+data/real/firs/
+data/real/*.log
+data/real/*.json
+*.log
+
+# Scratch / tmp
+.tmp_*.py
+_dash_check.js
+
+# Secrets / OS
+.env
+.DS_Store
+Thumbs.db
+
+# Scratch
+scripts/_install.py

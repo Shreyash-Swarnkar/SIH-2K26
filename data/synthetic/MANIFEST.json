@@ -1,0 +1,81 @@
+{
+  "seed": 20260905,
+  "cartel": [
+    {
+      "name": "Vikram Rathore",
+      "role": "kingpin",
+      "phone": "98850-11221",
+      "city": "Mumbai"
+    },
+    {
+      "name": "Sanjay Mehta",
+      "role": "lieutenant",
+      "phone": "98110-55667",
+      "city": "Mumbai"
+    },
+    {
+      "name": "Imran Shaikh",
+      "role": "lieutenant",
+      "phone": "97022-11345",
+      "city": "Navi Mumbai"
+    },
+    {
+      "name": "Rajesh Kulkarni",
+      "role": "money",
+      "phone": "98220-77665",
+      "city": "Pune"
+    },
+    {
+      "name": "Anil Deshmukh",
+      "role": "logistics",
+      "phone": "99700-33455",
+      "city": "Thane"
+    },
+    {
+      "name": "Farhan Qureshi",
+      "role": "communicator",
+      "phone": "98922-99001",
+      "city": "Mumbai"
+    },
+    {
+      "name": "Dinesh Yadav",
+      "role": "associate",
+      "phone": "97671-22334",
+      "city": "Delhi"
+    },
+    {
+      "name": "Rohit Pawar",
+      "role": "associate",
+      "phone": "96540-88990",
+      "city": "Navi Mumbai"
+    },
+    {
+      "name": "Sneha Iyer",
+      "role": "associate",
+      "phone": "95511-44556",
+      "city": "Mumbai"
+    },
+    {
+      "name": "Arjun Nair",
+      "role": "associate",
+      "phone": "94220-66778",
+      "city": "Kochi"
+    },
+    {
+      "name": "Harpreet Singh",
+      "role": "associate",
+      "phone": "98550-12312",
+      "city": "Ludhiana"
+    },
+    {
+      "name": "Manoj Gupta",
+      "role": "associate",
+      "phone": "98102-77889",
+      "city": "Mumbai"
+    }
+  ],
+  "shell": "Rathore Fabrics Pvt Ltd",
+  "n_firs": 75,
+  "n_cdrs": 12,
+  "n_txns": 189
+}
