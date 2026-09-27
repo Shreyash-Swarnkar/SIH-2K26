@@ -128,6 +128,8 @@ const cyEl = document.getElementById('cy');
 const $ = s => document.querySelector(s);
 let cy = null;
 let DATA = null;
+let evidenceCache = new Map();
+let CURRENT_DS = 'synthetic';
 const TYPE_COLOR = {PERSON:'#4f7cff',PHONE:'#3ecf8e',ACCOUNT:'#b777e0',VEHICLE:'#e0a75c',
                     ORG:'#7aa7d0',LOC:'#62b6b6',DATE:'#888',FIR:'#777',AMOUNT:'#888'};
 const TYPE_BADGE = {PERSON:'b-person',PHONE:'b-phone',ACCOUNT:'b-account',VEHICLE:'b-vehicle',
@@ -173,7 +175,7 @@ function initCy(){
   cy.on('tap',()=>{ $('#tip').style.display='none'; });
 }
 
-function showNode(evt){
+async function showNode(evt){
   const n=evt.target; const d=n.data();
   const tip=$('#tip');
   const phone=d.phone?`<div><span class="k">Phone:</span> ${d.phone}</div>`:'';
@@ -188,6 +190,52 @@ function showNode(evt){
   tip.style.left=(evt.renderedPosition.x+12)+'px';
   tip.style.top=(evt.renderedPosition.y+12)+'px';
   tip.style.display='block';
+
+  // right panel: fetch richer connection + evidence details from backend
+  try{
+    const nodeId = d.id;
+    if(!nodeId) return;
+    const cacheKey = CURRENT_DS + '::' + nodeId;
+    if(evidenceCache.has(cacheKey)){
+      paintEvidence(evidenceCache.get(cacheKey));
+      return;
+    }
+    $('#evidence').innerHTML='<div class="empty">Loading connections…</div>';
+    const resp = await fetch('/node/'+encodeURIComponent(nodeId)+'?dataset='+encodeURIComponent(CURRENT_DS));
+    if(!resp.ok) throw new Error('node fetch failed');
+    const payload = await resp.json();
+    evidenceCache.set(cacheKey, payload);
+    paintEvidence(payload);
+  }catch(err){
+    $('#evidence').innerHTML='<div class="empty">No connection/evidence info available for this node.</div>';
+  }
+}
+
+function paintEvidence(payload){
+  const node = payload.node || {};
+  const conns = payload.connections || [];
+  const title = (node.value||node.id||'node');
+  const top = conns.slice(0,12);
+  const rows = top.map(c => {
+    const badge = '<span class="badge '+TYPE_BADGE[c.neighbor_type]||''+'">'+(c.neighbor_type||'UNKNOWN')+'</span>';
+    const kinds = (c.kinds && c.kinds.length) ? c.kinds.join('/') : '—';
+    const ev = (c.evidence && c.evidence.length) ? c.evidence.slice(0,6).join(', ') : '—';
+    return `<div class="flag" style="cursor:default">
+      <b>${badge} ${c.neighbor_name || c.neighbor_id}</b>
+      <div style="color:var(--mut);font-size:11px;margin-top:2px">kinds: ${kinds} · weight ${Number(c.weight||1).toFixed(2)}</div>
+      <div class="note">Evidence: ${ev}</div>
+    </div>`;
+  }).join('');
+
+  const more = conns.length > top.length
+    ? `<div style="margin-top:8px;color:var(--mut);font-size:11px">Showing ${top.length} of ${conns.length} connections</div>`
+    : '';
+
+  $('#evidence').innerHTML = `
+    <div style="font-weight:800;margin-bottom:6px">Connections for ${title}</div>
+    ${rows || '<div class="empty">No connections found.</div>'}
+    ${more}
+  `;
 }
 
 function render(){
@@ -238,9 +286,11 @@ function resolveName(id){
 async function load(){
   try{
     const ds=$('#dataset').value;
+    CURRENT_DS = ds;
     let r=await fetch('/results?dataset='+ds);
     if(!r.ok) throw 0;
     DATA=await r.json();
+    evidenceCache.clear();
     render();
   }catch(e){
     $('#status').textContent='no results — run analyze';
