@@ -29,7 +29,7 @@ def ensure_venv():
     # Upgrade pip and install requirements
     print("[*] Installing/upgrading dependencies...")
     sh(pip, "install", "--upgrade", "pip")
-    sh(pip, "install", "-r", "requirements.txt")
+    sh(pip, "install", "-r", "setup/requirements.txt")
     # Install spaCy model
     sh(py, "-m", "spacy", "download", "en_core_web_sm")
     return py
